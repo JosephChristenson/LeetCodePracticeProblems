@@ -1,9 +1,5 @@
 package main
 
-import (
-	"fmt"
-)
-
 // Roman numerals are represented by seven different symbols: I, V, X, L, C, D and M.
 
 // Symbol       Value
@@ -23,70 +19,70 @@ import (
 // C can be placed before D (500) and M (1000) to make 400 and 900.
 // Given a roman numeral, convert it to an integer.
 
-func main() {
-	s := "III"
-	fmt.Print(romanToInt(s))
-	s = "LVIII"
-	fmt.Print(romanToInt(s))
-	s = "MCMXCIV"
-	fmt.Print(romanToInt(s))
-}
+// func main() {
+// 	s := "III"
+// 	fmt.Print(romanToInt(s))
+// 	s = "LVIII"
+// 	fmt.Print(romanToInt(s))
+// 	s = "MCMXCIV"
+// 	fmt.Print(romanToInt(s))
+// }
 
-func romanToInt(s string) int {
-	result := 0
-	byteArray := []byte(s)
-	previousLetter := byte('a')
+// func romanToInt(s string) int {
+// 	result := 0
+// 	byteArray := []byte(s)
+// 	previousLetter := byte('a')
 
-	for _, Letter := range byteArray {
-		switch Letter {
-		case 'I':
-			result = result + 1
-			previousLetter = 'I'
-		case 'V':
-			if previousLetter == 'I' {
-				result = result + 3
-			} else {
-				result = result + 5
-			}
-			previousLetter = 'V'
-		case 'X':
-			if previousLetter == 'I' {
-				result = result + 8
-			} else {
-				result = result + 10
-			}
-			previousLetter = 'X'
-		case 'L':
-			if previousLetter == 'X' {
-				result = result + 30
-			} else {
-				result = result + 50
-			}
-			previousLetter = 'L'
-		case 'C':
-			if previousLetter == 'X' {
-				result = result + 80
-			} else {
-				result = result + 100
-			}
-			previousLetter = 'C'
-		case 'D':
-			if previousLetter == 'C' {
-				result = result + 300
-			} else {
-				result = result + 500
-			}
-			previousLetter = 'D'
-		case 'M':
-			if previousLetter == 'C' {
-				result = result + 800
-			} else {
-				result = result + 1000
-			}
-			previousLetter = 'L'
-		default:
-		}
-	}
+// 	for _, Letter := range byteArray {
+// 		switch Letter {
+// 		case 'I':
+// 			result = result + 1
+// 			previousLetter = 'I'
+// 		case 'V':
+// 			if previousLetter == 'I' {
+// 				result = result + 3
+// 			} else {
+// 				result = result + 5
+// 			}
+// 			previousLetter = 'V'
+// 		case 'X':
+// 			if previousLetter == 'I' {
+// 				result = result + 8
+// 			} else {
+// 				result = result + 10
+// 			}
+// 			previousLetter = 'X'
+// 		case 'L':
+// 			if previousLetter == 'X' {
+// 				result = result + 30
+// 			} else {
+// 				result = result + 50
+// 			}
+// 			previousLetter = 'L'
+// 		case 'C':
+// 			if previousLetter == 'X' {
+// 				result = result + 80
+// 			} else {
+// 				result = result + 100
+// 			}
+// 			previousLetter = 'C'
+// 		case 'D':
+// 			if previousLetter == 'C' {
+// 				result = result + 300
+// 			} else {
+// 				result = result + 500
+// 			}
+// 			previousLetter = 'D'
+// 		case 'M':
+// 			if previousLetter == 'C' {
+// 				result = result + 800
+// 			} else {
+// 				result = result + 1000
+// 			}
+// 			previousLetter = 'L'
+// 		default:
+// 		}
+// 	}
 
-	return result
-}
+// 	return result
+// }
