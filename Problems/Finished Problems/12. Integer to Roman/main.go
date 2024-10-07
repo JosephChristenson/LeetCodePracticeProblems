@@ -1,5 +1,7 @@
 package main
 
+import "fmt"
+
 // Seven different symbols represent Roman numerals with the following values:
 
 // Symbol	Value
@@ -17,38 +19,38 @@ package main
 // Only powers of 10 (I, X, C, M) can be appended consecutively at most 3 times to represent multiples of 10. You cannot append 5 (V), 50 (L), or 500 (D) multiple times. If you need to append a symbol 4 times use the subtractive form.
 // Given an integer, convert it to a Roman numeral.
 
-// func main() {
-// 	num := 3749
-// 	fmt.Println(intToRoman(num))
-// 	num = 58
-// 	fmt.Println(intToRoman(num))
-// 	num = 1994
-// 	fmt.Println(intToRoman(num))
-// }
-// func intToRoman(num int) string {
-// 	Numerals := []int{1, 5, 10, 50, 100, 500, 1000}
-// 	CombineNum := []int{0, 1, 1, 10, 10, 100, 100}
-// 	Character := []byte{'I', 'V', 'X', 'L', 'C', 'D', 'M'}
-// 	CombineChar := []byte{'I', 'I', 'I', 'X', 'X', 'C', 'C'}
+func main() {
+	num := 3749
+	fmt.Println(intToRoman(num))
+	num = 58
+	fmt.Println(intToRoman(num))
+	num = 1994
+	fmt.Println(intToRoman(num))
+}
+func intToRoman(num int) string {
+	Numerals := []int{1, 5, 10, 50, 100, 500, 1000}
+	CombineNum := []int{0, 1, 1, 10, 10, 100, 100}
+	Character := []byte{'I', 'V', 'X', 'L', 'C', 'D', 'M'}
+	CombineChar := []byte{'I', 'I', 'I', 'X', 'X', 'C', 'C'}
 
-// 	byteList := make([]byte, 0)
+	byteList := make([]byte, 0)
 
-// 	i := 6
+	i := 6
 
-// 	for i >= 0 {
-// 		if num >= Numerals[i] {
-// 			num = num - Numerals[i]
-// 			byteList = append(byteList, Character[i])
+	for i >= 0 {
+		if num >= Numerals[i] {
+			num = num - Numerals[i]
+			byteList = append(byteList, Character[i])
 
-// 		} else if num >= Numerals[i]-CombineNum[i] {
-// 			num = num - (Numerals[i] - CombineNum[i])
-// 			byteList = append(byteList, CombineChar[i])
-// 			byteList = append(byteList, Character[i])
+		} else if num >= Numerals[i]-CombineNum[i] {
+			num = num - (Numerals[i] - CombineNum[i])
+			byteList = append(byteList, CombineChar[i])
+			byteList = append(byteList, Character[i])
 
-// 		} else {
-// 			i--
-// 		}
-// 	}
-// 	return string(byteList)
+		} else {
+			i--
+		}
+	}
+	return string(byteList)
 
-// }
+}

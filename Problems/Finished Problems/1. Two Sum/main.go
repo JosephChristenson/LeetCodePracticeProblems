@@ -6,36 +6,38 @@ package main
 
 // You can return the answer in any order.
 
-// func main() {
-// 	nums := []int{2, 7, 11, 15}
-// 	target := 9
-// 	fmt.Print(twoSum(nums, target))
-// 	nums = []int{3, 2, 4}
-// 	target = 6
-// 	fmt.Print(twoSum(nums, target))
-// 	nums = []int{3, 3}
-// 	target = 6
-// 	fmt.Print(twoSum(nums, target))
-// }
+import "fmt"
+
+func main() {
+	nums := []int{2, 7, 11, 15}
+	target := 9
+	fmt.Print(twoSum(nums, target))
+	nums = []int{3, 2, 4}
+	target = 6
+	fmt.Print(twoSum(nums, target))
+	nums = []int{3, 3}
+	target = 6
+	fmt.Print(twoSum(nums, target))
+}
+
+func twoSum(nums []int, target int) []int {
+	var m map[int]int
+	m = make(map[int]int)
+	for index, value := range nums {
+		result := m[target-value]
+
+		if result != 0 {
+			return []int{index, result}
+		} else if nums[0]+value == target && index != 0 {
+			return []int{0, index}
+		} else {
+			m[value] = index
+		}
+	}
+	return nil
+}
 
 // func twoSum(nums []int, target int) []int {
-// 	var m map[int]int
-// 	m = make(map[int]int)
-// 	for index, value := range nums {
-// 		result := m[target-value]
-
-// 		if result != 0 {
-// 			return []int{index, result}
-// 		} else if nums[0]+value == target && index != 0 {
-// 			return []int{0, index}
-// 		} else {
-// 			m[value] = index
-// 		}
-// 	}
-// 	return nil
-// }
-
-// func twoSums(nums []int, target int) []int {
 
 // 	checkedvalues := []int{}
 

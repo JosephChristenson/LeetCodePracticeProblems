@@ -6,14 +6,15 @@ package main
 
 // It is not necessary to use all characters in letters and each letter can only be used once. Score of letters 'a', 'b', 'c', ... ,'z' is given by score[0], score[1], ... , score[25] respectively.
 
-// func main() {
-// 	words := []string{"dog", "cat", "dad", "good"}
-// 	letters := []byte{'a', 'a', 'c', 'd', 'd', 'd', 'g', 'o', 'o'}
-// 	score := []int{1, 0, 9, 5, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
-// 	fmt.Print(maxScoreWords(words, letters, score))
-// }
+import "fmt"
 
-// func maxScoreWords(words []string, letters []byte, score []int) int {
-// 	possibleCombos := [][]string{}
+func main() {
+	words := []string{"dog", "cat", "dad", "good"}
+	letters := []byte{'a', 'a', 'c', 'd', 'd', 'd', 'g', 'o', 'o'}
+	score := []int{1, 0, 9, 5, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
+	fmt.Print(maxScoreWords(words, letters, score))
+}
 
-// }
+func maxScoreWords(words []string, letters []byte, score []int) int {
+
+}
