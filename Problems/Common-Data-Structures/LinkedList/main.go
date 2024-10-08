@@ -2,7 +2,26 @@
 package main
 
 func main() {
-	list := LinkedList{nil, 0}
+	//list := LinkedList{nil, 0}
+
+	// Example provided by Jake
+	head := []int{1, 2, 3, 4, 5}
+	run(head)
+}
+
+func run(nums []int) { //Converts Array to List
+	var prev, root *ListNode
+	for i, n := range nums {
+		node := &ListNode{Val: n}
+		if i == 0 {
+			root = node
+			prev = root
+		} else {
+			prev.Next = node
+			prev = node
+		}
+	}
+	//fmt.Println(removeNthFromEnd(root, len(nums)))
 }
 
 type Node struct {
