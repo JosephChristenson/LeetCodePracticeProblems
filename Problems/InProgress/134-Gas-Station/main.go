@@ -16,9 +16,26 @@ func main() {
 }
 
 func canCompleteCircuit(gas []int, cost []int) int {
-
-	total := 0
+	score, start, highestcost := 0, 0, 0
 	for index, val := range gas {
-		total = total + val - cost[index]
+		if index+1 == len(gas) {
+			score = score + val - cost[0]
+		} else {
+			score = score + val - cost[index+1]
+		}
+		if score <= highestcost {
+			highestcost = score
+			start = index + 1 // wanted index is the one after the worst cost.
+		}
+
+		fmt.Println(score)
 	}
+
+	if score >= 0 {
+		if start == len(gas) {
+			start = 0
+		}
+		return start + 1 // correct for base 0 index
+	}
+	return -1
 }
