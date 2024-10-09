@@ -17,33 +17,41 @@ func main() {
 	fmt.Println(candy(ratings))
 }
 
-type child struct {
-	rating int
-	candy  int
-}
-
 func candy(ratings []int) int {
-	var m map[int]child
-	m = make(map[int]child)
-	amount, lowestamount := 0, 1
 
-	for index, value := range ratings {
+	results := make([]int, len(ratings))
 
-		if value < m[index-1].rating { // if the previous child is higher rank go down 1 candy
-			amount = m[index-1].candy - 1
-		} else { // current child is better than previous child 1 more candy
-			amount = m[index-1].candy + 1
-		}
-		if amount < lowestamount {
-			lowestamount = amount
-		}
-		m[index] = child{
-			rating: value,
-			candy:  amount,
+	for index, _ := range ratings {
+		if index == 0 {
+			results[index] = 1
+		} else {
+			if ratings[index] > ratings[index-1] {
+				results[index] = results[(index-1)] + 1
+			} else {
+				results[index] = 1
+			}
 		}
 	}
-	for index, value := range m{
-		if m[index].rating < m[index - 1]
+	index := len(ratings) - 1
+	total := 0
 
+	for index >= 0 {
+		temp := 0
+		if index == len(ratings)-1 {
+			temp = 1
+		} else {
+			if ratings[index] > ratings[index+1] {
+				temp = results[(index+1)] + 1
+			} else {
+				temp = 1
+			}
+		}
+
+		if results[index] < temp {
+			results[index] = temp
+		}
+		total = total + results[index]
+		index--
 	}
+	return total
 }

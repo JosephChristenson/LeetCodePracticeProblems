@@ -13,27 +13,26 @@ func main() {
 	fmt.Println(canCompleteCircuit(gas, cost))
 	gas, cost = []int{2, 3, 4}, []int{3, 4, 3}
 	fmt.Println(canCompleteCircuit(gas, cost))
+	gas, cost = []int{5, 8, 2, 8}, []int{6, 5, 6, 6}
+	fmt.Println(canCompleteCircuit(gas, cost))
+	gas, cost = []int{3, 1, 1}, []int{1, 2, 2}
+	fmt.Println(canCompleteCircuit(gas, cost))
 }
 
 func canCompleteCircuit(gas []int, cost []int) int {
-	score, start, highestcost := 0, 0, 0
-	for index, val := range gas {
-		if index+1 == len(gas) {
-			score = score + val - cost[0]
-		} else {
-			score = score + val - cost[index+1]
-		}
+	score, start, highestcost := 0, 0, 1000
+	for index, _ := range gas {
+		score = score + gas[index] - cost[index]
 		if score <= highestcost {
 			highestcost = score
-			start = index + 1 // wanted index is the one after the worst cost.
+			start = index
 		}
 
-		fmt.Println(score)
 	}
 
 	if score >= 0 {
-		if start == len(gas) {
-			start = 0
+		if start+1 == len(gas) {
+			return 0
 		}
 		return start + 1 // correct for base 0 index
 	}

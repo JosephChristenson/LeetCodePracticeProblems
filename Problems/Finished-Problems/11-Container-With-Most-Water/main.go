@@ -19,20 +19,21 @@ func main() {
 }
 
 func maxArea(height []int) int {
-	result, test, leftindex := 0, 0, 0
-	for X, Y := range height {
-		if X != leftindex {
-			if height[leftindex] <= Y {
-				test = height[leftindex] * (X - leftindex)
-			} else {
-				test = Y * (X - leftindex)
-			}
-			if test > result {
-				result = test
-			}
-			if leftindex/height[leftindex] <= X/Y {
-				leftindex = X
-			}
+	index1, index2 := 0, len(height)-1
+
+	result := 0
+	for index1 < index2 {
+		Y1, Y2 := height[index1], height[index2]
+		area := 0
+		if Y1 >= Y2 {
+			area = (index2 - index1) * Y2
+			index2--
+		} else {
+			area = (index2 - index1) * Y1
+			index1++
+		}
+		if result < area {
+			result = area
 		}
 	}
 	return result
