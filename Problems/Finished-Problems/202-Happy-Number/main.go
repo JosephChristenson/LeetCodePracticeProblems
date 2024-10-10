@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"math"
+	"strconv"
 )
 
 // Write an algorithm to determine if a number n is happy.
@@ -24,14 +25,15 @@ func main() {
 func isHappy(n int) bool {
 	var m map[int]bool
 	m = make(map[int]bool)
-	digits := n
+
+	digits := []byte(strconv.Itoa(n))
 	for {
-		fmt.Println(digits)
 		total := 0
-		for _,{
-			total = total + int(math.Pow(float64(digit(digits))))
+		for _, digit := range digits {
+			number, _ := strconv.Atoi(string(digit))
+			total = total + int(math.Pow(float64(number), 2))
 		}
-		
+		fmt.Println(total)
 		if total == 1 {
 			return true
 		}
@@ -39,12 +41,6 @@ func isHappy(n int) bool {
 			return false
 		}
 		m[total] = true
-		digits = total
+		digits = []byte(strconv.Itoa(total))
 	}
-
-}
-
-func digit(num, place int) int {
-    r := num % int(math.Pow(10, float64(place)))
-    return r / int(math.Pow(10, float64(place-1)))
 }
