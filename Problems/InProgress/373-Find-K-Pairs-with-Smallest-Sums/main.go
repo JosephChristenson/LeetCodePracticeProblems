@@ -7,8 +7,8 @@ package main
 // Return the k pairs (u1, v1), (u2, v2), ..., (uk, vk) with the smallest sums.
 
 import (
-	"container/heap"
 	"fmt"
+	"sort"
 )
 
 func main() {
@@ -21,44 +21,14 @@ func main() {
 }
 
 func kSmallestPairs(nums1 []int, nums2 []int, k int) [][]int {
-	h := &IntHeap{}
-	i := &IntHeap{}
-
-	for _, val := range nums1 {
-		heap.Push(h, val)
-	}
-	for _, val := range nums2 {
-		heap.Push(i, val)
-	}
-	heap.Init(h)
-	heap.Init(i)
-
-	result := [][]int{}
-	for k-1 >= 0 {
-		if storeI != 0 {
-			storeH = heap.Pop(h)
+	allPairs := [][]int{}
+	for _, val1 := range nums1 {
+		for _, val2 := range nums2 {
+			allPairs = append(allPairs, []int{val1, val2})
 		}
-
-		val := heap.Pop(h).([]int)
-		result = append(result, val)
-		k--
 	}
-	return result
-
-}
-
-type IntHeap []int
-
-func (h IntHeap) Len() int           { return len(h) }
-func (h IntHeap) Swap(i, j int)      { h[i], h[j] = h[j], h[i] }
-func (h IntHeap) Less(i, j int) bool { return h[i] < h[j] } // with the greater than sign it sorts from highest to lowest
-func (h *IntHeap) Pop() any {
-	old := *h
-	n := len(old)
-	x := old[n-1]
-	*h = old[0 : n-1]
-	return x
-}
-func (h *IntHeap) Push(x any) {
-	*h = append(*h, x.(int))
+	sort.Slice(allPairs, func(i, j int) bool {
+		return allPairs[i][0]+allPairs[i][1] < allPairs[j][0]+allPairs[j][1]
+	})
+	return allPairs[:k]
 }
