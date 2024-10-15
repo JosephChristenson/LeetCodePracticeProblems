@@ -24,6 +24,11 @@ func run(nums []int) { //Converts Array to List
 	//fmt.Println(removeNthFromEnd(root, len(nums)))
 }
 
+type ListNode struct {
+	Val  int
+	Next *ListNode
+}
+
 type Node struct {
 	data int
 	next *Node

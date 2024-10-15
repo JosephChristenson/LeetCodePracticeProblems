@@ -19,34 +19,41 @@ func main() {
 	nums = []int{1, 3}
 	target = 3
 	fmt.Println(searchInsert(nums, target))
+	nums = []int{3, 5, 7, 9, 10}
+	target = 8
+	fmt.Println(searchInsert(nums, target))
 }
 
 func searchInsert(nums []int, target int) int {
-
-	if nums[0] >= target {
+	low, high := 0, len(nums)-1
+	if target <= nums[0] {
 		return 0
-	} else if nums[len(nums)-1] < target {
+	} else if target > nums[len(nums)-1] {
 		return len(nums)
 	}
 
-	half := len(nums) / 2
-	index := len(nums) - half + half%2
-
-	for half > 1 {
-		if nums[index] == target {
-			return index
+	mid := low + (high-low)/2
+	for low <= high {
+		if low == high {
+			if nums[low] < target { // could be equal if its a 1 index array
+				return low
+			} else {
+				return low + 1
+			}
 		}
-		if nums[index] > target {
-			index = index - half/2 + half%2
-			half = half / 2
+		mid = low + (high-low)/2
+		if nums[mid] == target {
+			return mid
+		} else if nums[mid] < target {
+			low = mid + 1
 		} else {
-			index = index + half/2 + half%2
-			half = half / 2
+			high = mid - 1
 		}
 	}
-	if index == len(nums) {
-		return len(nums) - 1
+	if target < nums[mid] {
+		return mid
 	} else {
-		return index
+		return mid + 1
 	}
+
 }
