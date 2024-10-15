@@ -25,8 +25,9 @@ func isMatch(s string, p string) bool {
 	}
 	stringArray := []byte(s)
 	patternArray := []byte(p)
+	indexOffset := 0
 
-	for index := 0; index <= len(stringArray)-1 && index <= len(patternArray)-1; index++ {
+	for index := 0; index <= len(stringArray)-1 && index+indexOffset <= len(patternArray)-1; index++ {
 		if patternArray[index] == '*' {
 			return true
 		} else if patternArray[index] == stringArray[index] {
