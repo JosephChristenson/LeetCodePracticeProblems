@@ -32,35 +32,32 @@ func run(nums []int) *ListNode {
 }
 
 func deleteDuplicates(head *ListNode) *ListNode {
-
-	curr := head
-
-	var root *ListNode
-	var empty *ListNode
-	var prev *ListNode
-
-	for curr != nil {
-		if curr.Next != empty {
-			if curr.Next.Val == curr.Val {
-				curr = curr.Next
-				prev.Next = nil
-			} else {
-				if root == empty {
-					root = curr
-				}
-				prev = curr
-				curr = curr.Next
-			}
-		} else {
-			if prev != nil {
-				if prev.Val != curr.Val {
-					prev.Next = curr
-				}
-			}
-			curr = empty
-		}
+	if head == nil {
+		return nil
 	}
-	return root
+	if head.Next == nil {
+		return head
+	}
+	start := head
+	curr := head.Next
+	prev := head
+	goodNode := prev
+
+	if prev.Val == curr.Val {
+		goodNode.Next = nil
+	}
+	for curr != nil {
+		if curr.Val == prev.Val {
+			goodNode.Next = nil
+		} else {
+			goodNode.Next = curr
+			goodNode = curr
+		}
+		prev = curr
+		curr = curr.Next
+	}
+	return start
+
 }
 
 // exceeds memory limit
