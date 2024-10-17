@@ -9,7 +9,7 @@ func main() {
 	run(head)
 }
 
-func run(nums []int) { //Converts Array to List
+func run(nums []int) *ListNode {
 	var prev, root *ListNode
 	for i, n := range nums {
 		node := &ListNode{Val: n}
@@ -21,7 +21,7 @@ func run(nums []int) { //Converts Array to List
 			prev = node
 		}
 	}
-	//fmt.Println(removeNthFromEnd(root, len(nums)))
+	return root
 }
 
 type ListNode struct {

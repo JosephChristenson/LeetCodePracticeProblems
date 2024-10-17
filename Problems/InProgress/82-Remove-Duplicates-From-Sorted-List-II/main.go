@@ -1,6 +1,8 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+)
 
 // Given the head of a sorted linked list, delete all nodes that have duplicate numbers, leaving only distinct numbers from the original list. Return the linked list sorted as well.
 
@@ -32,32 +34,46 @@ func run(nums []int) *ListNode {
 }
 
 func deleteDuplicates(head *ListNode) *ListNode {
-	if head == nil {
-		return nil
-	}
-	if head.Next == nil {
-		return head
-	}
-	start := head
-	curr := head.Next
-	prev := head
-	goodNode := prev
 
-	if prev.Val == curr.Val {
-		goodNode.Next = nil
-	}
+	var m map[int]*ListNode
+	m = make(map[int]*ListNode)
+	var boolMap map[int]bool
+	boolMap = make(map[int]bool)
+
+	curr := head
 	for curr != nil {
-		if curr.Val == prev.Val {
-			goodNode.Next = nil
+		if m[curr.Val] != nil {
+			boolMap[curr.Val] = false
 		} else {
-			goodNode.Next = curr
-			goodNode = curr
+			boolMap[curr.Val] = true
+			m[curr.Val] = curr
 		}
-		prev = curr
 		curr = curr.Next
 	}
-	return start
+	var start *ListNode
+	var Previous *ListNode
 
+	for index, Key := range boolMap {
+		if Key {
+			if start == nil {
+				start = m[index]
+			}
+			if Previous == nil {
+				Previous = m[index]
+			} else {
+				Previous.Next = m[index]
+				Previous = Previous.Next
+			}
+		}
+	}
+	if start == nil {
+		return nil
+	}
+	if start.Next == start { // In case there is only one element period in the list. Make sure it doesn't point to itself
+		start.Next = nil
+	}
+
+	return start
 }
 
 // exceeds memory limit

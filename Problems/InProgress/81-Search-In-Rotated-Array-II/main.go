@@ -20,5 +20,36 @@ func main() {
 }
 
 func search(nums []int, target int) bool {
+	front, back := 0, len(nums)-1
+	interval := len(nums)/10 + 1
+	for back >= front && back > 0 && front < len(nums)-1 {
+		if nums[front] < target {
+			front += interval
+		} else if nums[front] == target {
+			return true
+		}
+		if nums[back] > target {
+			back = back - interval
+		} else if nums[back] == target {
+			return true
+		}
+	}
+	for back < front {
+		if nums[back] != target {
+			back++
+		} else {
+			return true
+		}
+	}
+	return false
+}
 
+func findFastestStep(length int) int {
+	result := 0
+	count := 1
+	for result < length {
+		result = result + count
+		count++
+	}
+	return count
 }
