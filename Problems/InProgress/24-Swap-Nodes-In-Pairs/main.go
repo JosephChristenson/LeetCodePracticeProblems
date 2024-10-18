@@ -38,14 +38,10 @@ func swapPairs(head *ListNode) *ListNode {
 		return nil
 	} else if head.Next == nil {
 		return head
+	} else {
+		temp := head.Next
+		head.Next = head
+		head = swapPairs(temp)
+		return head.Next
 	}
-
-	prev, curr := head, head.Next
-	start := head
-
-	for curr != nil && curr.Next != nil {
-		prev.Next = curr
-
-	}
-
 }
