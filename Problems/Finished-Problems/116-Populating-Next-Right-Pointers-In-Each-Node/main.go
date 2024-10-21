@@ -1,10 +1,5 @@
 package main
 
-import (
-	"fmt"
-	"slices"
-)
-
 func main() {
 
 }
@@ -31,9 +26,7 @@ func connect(root *Node) *Node {
 		}
 		results = append(results, []*Node{root.Left, root.Right})
 	}
-	slices.Reverse(results)
-	fmt.Println(results)
-	for i := 0; i < len(results)-1; i++ {
+	for i := len(results) - 1; i > 0; i-- {
 		for j := 0; j < len(results[i]); j++ {
 			if j == len(results[i])-1 {
 				results[i][j].Right.Next = nil
