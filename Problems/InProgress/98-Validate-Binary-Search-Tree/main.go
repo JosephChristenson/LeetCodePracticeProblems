@@ -13,43 +13,19 @@ type TreeNode struct {
 func isValidBST(root *TreeNode) bool {
 	if root == nil {
 		return false
-	}
-	test := true
-	if root.Left != nil {
-		if root.Left.Val >= root.Val {
-			return false
-		}
-		test = test && testValues(root.Left, root.Val, root.Val)
-	}
-	if root.Right != nil {
-		if root.Right.Val <= root.Val {
-			return false
-		}
-		test = test && testValues(root.Right, root.Val, root.Val)
-	}
-	return true
+	} 
 }
-
-func testValues(root *TreeNode, min int, max int) bool {
-	test := true
-
-	if root.Val < min {
-		min = root.Val
+func findRange(root *TreeNode) (int, int,bool){//min, max
+	min, max := root.Val, root.Val
+	fail = false
+	if root.Right != nil{
+		temp1, temp2, tempF = findLowest(root.Right)
+		if temp1 <
 	}
-	if root.Val > max {
-		max = root.Val
+	if root.Left != nil{
+		max, max, fail = findHighest(root.Left)
 	}
-	if root.Left != nil {
-		if root.Left.Val >= min {
-			return false
-		}
-		test = test && testValues(root.Left, min, max)
+	if root.Left == nil && root.Right == nil{
+		return root.Val,root.Val false
 	}
-	if root.Right != nil {
-		if root.Right.Val <= max {
-			return false
-		}
-		test = test && testValues(root.Left, min, max)
-	}
-	return true
 }
