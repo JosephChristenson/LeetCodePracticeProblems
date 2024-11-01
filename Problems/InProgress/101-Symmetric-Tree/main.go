@@ -13,21 +13,41 @@ type TreeNode struct {
 func isSymmetric(root *TreeNode) bool {
 	if root == nil {
 		return false
-	} else if root.Left != nil && root.Right != nil {
-		return reflectSide(root.Left) == root.Right
+	}
+	if root.Left != nil && root.Right != nil {
+		left := inorderTraversal(root.Left)
+		right := inorderTraversal(root.Right)
+		if len(left) == len(right) {
+			for index, val := range left {
+				if val != right[len(right)-index-1] {
+					return false
+				}
+			}
+			return true
+		} else {
+			return false
+		}
+	} else if root.Left == nil && root.Right == nil {
+		return true
 	}
 	return false
 }
 
-func reflectSide(root *TreeNode) *TreeNode {
-	if root.Left != nil && root.Right != nil {
-		root.Left, root.Right = reflectSide(root.Right), reflectSide(root.Left)
-	} else if root.Left != nil {
-		root.Right = reflectSide(root.Left)
-	} else if root.Right != nil {
-		root.Left = reflectSide(root.Right)
-	} else {
+func inorderTraversal(root *TreeNode) []int {
+	if root == nil {
 		return nil
+	} else if root.Left != nil && root.Right != nil {
+		left := inorderTraversal(root.Left)
+		left = append(left, root.Val)
+		right := inorderTraversal(root.Right)
+		return append(left, right...)
+	} else if root.Left != nil {
+		left := inorderTraversal(root.Left)
+		return append(left, append([]int{root.Val}, -1)...)
+	} else if root.Right != nil {
+		right := inorderTraversal(root.Right)
+		return append([]int{-1}, append([]int{root.Val}, right...)...)
+	} else {
+		return []int{root.Val}
 	}
-	return root
 }

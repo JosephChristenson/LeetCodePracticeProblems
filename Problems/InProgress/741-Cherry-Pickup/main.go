@@ -17,130 +17,112 @@ import "fmt"
 func main() {
 	grid := [][]int{{0, 1, -1}, {1, 0, -1}, {1, 1, 1}}
 	fmt.Println(cherryPickup(grid))
+	grid = [][]int{{0, 1, -1}, {1, 0, -1}, {1, -1, 1}}
+	fmt.Println(cherryPickup(grid))
+	grid = [][]int{{1}}
+	fmt.Println(cherryPickup(grid))
+	grid = [][]int{{0, 0}, {-1, 1}}
+	fmt.Println(cherryPickup(grid))
+	grid = [][]int{{1, 1, 1}, {1, 1, 1}, {1, 1, 1}}
+	fmt.Println(cherryPickup(grid))
+	grid = [][]int{{1, 1, 1, 1, 0, 0, 0}, {0, 0, 0, 1, 0, 0, 0}, {0, 0, 0, 1, 0, 0, 1}, {1, 0, 0, 1, 0, 0, 0}, {0, 0, 0, 1, 0, 0, 0}, {0, 0, 0, 1, 0, 0, 0}, {0, 0, 0, 1, 1, 1, 1}}
+	fmt.Println(cherryPickup(grid))
 }
 
 func cherryPickup(grid [][]int) int {
+	if len(grid) == 1 {
+		return grid[0][0]
+	}
 
+	start := &chart{}
+	reach := false
+	start, reach = createGrid(start, grid, 0, 0)
+	if reach {
+		return pickupCherries(start, true, []*chart{})
+	} else {
+		return 0
+	}
 }
 
-// type position struct {
-// 	X, Y int
-// }
+func pickupCherries(root *chart, goingDown bool, visitedList []*chart) int {
+	if goingDown {
+		right, down := 0, 0
+		if root.Right == nil && root.Down == nil {
+			return root.val + pickupCherries(root, !goingDown, visitedList) // switch Direction
+		}
+		if root.Right != nil {
+			right = root.val + pickupCherries(root.Right, goingDown, append(visitedList, root.Right))
+		}
+		if root.Down != nil {
+			down = root.val + pickupCherries(root.Down, goingDown, append(visitedList, root.Down))
+		}
+		if right > down {
+			return right
+		} else {
+			return down
+		}
+	} else {
+		left, up := 0, 0
+		if root.Left == nil && root.Up == nil { // return when it reaches top left corner again
+			return root.val
+		}
+		if root.Left != nil {
+			left = root.val + pickupCherries(root.Left, goingDown, visitedList)
+			for _, val := range visitedList {
+				if val == root.Left {
+					left = left - root.val
+					break
+				}
+			}
+		}
+		if root.Up != nil {
+			up = root.val + pickupCherries(root.Up, goingDown, visitedList)
+			for _, val := range visitedList {
+				if val == root.Up {
+					up = up - root.val
+					break
+				}
+			}
+		}
+		if left > up {
+			return left
+		} else {
+			return up
+		}
+	}
+}
 
-// func cherryPickup(grid [][]int) int {
-// 	rowCount, colCount := len(grid), len(grid[0])
+type chart struct {
+	val                   int
+	Up, Right, Down, Left *chart
+}
 
-// 	totalCherries := 0
-
-// 	var directions map[position]int
-// 	directions = make(map[position]int)
-
-// 	for y := rowCount - 1; y >= 0; y-- {
-// 		for x := colCount - 1; x >= 0; x-- {
-// 			if grid[y][x] == -1 {
-// 				directions[position{X: x, Y: y}] = -1
-// 			} else {
-// 				valueX, valueY := 0, 0
-
-// 				if x+1 == colCount && y+1 == rowCount {
-// 					directions[position{X: x, Y: y}] = grid[y][x]
-// 				} else {
-// 					if x+1 == colCount {
-// 						valueX = -1
-// 					} else {
-// 						if directions[position{X: x + 1, Y: y}] == -1 {
-// 							valueX = -1
-// 						} else {
-// 							valueX = grid[y][x] + directions[position{X: x + 1, Y: y}]
-// 						}
-// 					}
-// 					if y+1 == rowCount {
-// 						valueY = -1
-// 					} else {
-// 						if directions[position{X: x, Y: y + 1}] == -1 {
-// 							valueY = -1
-// 						} else {
-// 							valueY = grid[y][x] + directions[position{X: x, Y: y + 1}]
-// 						}
-
-// 					}
-
-// 					if valueX == -1 && valueY == -1 {
-// 						directions[position{X: x, Y: y}] = -1 // if they are both dead ends then going to this node is a dead end
-// 					} else if valueX == -1 {
-// 						directions[position{X: x, Y: y}] = valueY
-// 					} else if valueY == -1 {
-// 						directions[position{X: x, Y: y}] = valueX
-// 					} else if valueX < valueY {
-// 						directions[position{X: x, Y: y}] = valueY
-// 					} else {
-// 						directions[position{X: x, Y: y}] = valueX
-// 					}
-// 				}
-// 			}
-// 		}
-// 	}
-// 	if directions[position{X: 0, Y: 0}] == -1 { // if there is no valid path or no cherries in the maze return now
-// 		return 0
-// 	}
-// 	totalCherries = directions[position{X: 0, Y: 0}]
-
-// 	x, y := 0, 0
-// 	for x < colCount && y < rowCount {
-// 		if directions[position{X: x + 1, Y: y}] > directions[position{X: x, Y: y + 1}] {
-// 			grid[y][x] = 0
-// 			x++
-// 		} else {
-// 			grid[y][x] = 0
-// 			y++
-// 		}
-// 	}
-
-// 	for y := 0; y < rowCount; y++ {
-// 		for x := 0; x < colCount; x++ {
-// 			if grid[y][x] == -1 {
-// 				directions[position{X: x, Y: y}] = -1
-// 			} else {
-// 				valueX, valueY := 0, 0
-
-// 				if x == 0 && y == 0 {
-// 					directions[position{X: x, Y: y}] = grid[y][x]
-// 				} else {
-// 					if x == 0 {
-// 						valueX = -1
-// 					} else {
-// 						if directions[position{X: x - 1, Y: y}] == -1 {
-// 							valueX = -1
-// 						} else {
-// 							valueX = grid[y][x] + directions[position{X: x - 1, Y: y}]
-// 						}
-// 					}
-// 					if y == 0 {
-// 						valueY = -1
-// 					} else {
-// 						if directions[position{X: x, Y: y - 1}] == -1 {
-// 							valueY = -1
-// 						} else {
-// 							valueY = grid[y][x] + directions[position{X: x, Y: y - 1}]
-// 						}
-
-// 					}
-
-// 					if valueX == -1 && valueY == -1 {
-// 						directions[position{X: x, Y: y}] = -1 // if they are both dead ends then going to this node is a dead end
-// 					} else if valueX == -1 {
-// 						directions[position{X: x, Y: y}] = valueY
-// 					} else if valueY == -1 {
-// 						directions[position{X: x, Y: y}] = valueX
-// 					} else if valueX < valueY {
-// 						directions[position{X: x, Y: y}] = valueY
-// 					} else {
-// 						directions[position{X: x, Y: y}] = valueX
-// 					}
-// 				}
-// 			}
-// 		}
-// 	}
-
-// 	return totalCherries + directions[position{X: colCount - 1, Y: rowCount - 1}]
-// }
+func createGrid(root *chart, grid [][]int, X int, Y int) (*chart, bool) { // bool represents if it could reach the bottom right corner
+	if grid[Y][X] == -1 {
+		return nil, false
+	}
+	pass := false
+	root.val = grid[Y][X]
+	val1 := false
+	val2 := false
+	if X+1 == len(grid) && Y+1 == len(grid) {
+		pass = true
+	}
+	if X < len(grid[0])-1 {
+		newChild := &chart{}
+		newChild, val1 = createGrid(newChild, grid, X+1, Y)
+		if newChild != nil {
+			newChild.Left = root
+			root.Right = newChild
+		}
+	}
+	if Y < len(grid)-1 {
+		newChild := &chart{}
+		newChild, val2 = createGrid(newChild, grid, X, Y+1)
+		if newChild != nil {
+			newChild.Up = root
+			root.Down = newChild
+		}
+	}
+	return root, pass || val1 || val2
+}

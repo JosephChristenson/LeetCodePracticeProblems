@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"slices"
 )
 
 // You are given a rows x cols matrix grid representing a field of cherries where grid[i][j] represents the number of cherries that you can collect from the (i, j) cell.
@@ -37,12 +38,87 @@ func main() {
 	fmt.Println(cherryPickup(grid))
 }
 
-type position struct {
-	X, Y int
+type node struct {
+	val                 int
+	left, right, center *node
 }
-type valuePath struct {
-	value, bestCol, secondBestCol int
+
+func cherryPickup(grid [][]int) int {
+	start1 := &node{}
+	start2 := &node{}
+	start1, start2 = createFirstRow(grid)
+	return findBestPath(start1, start2)
 }
+
+func findBestPath(LeftRobot *node, RightRobot *node) int {
+	if LeftRobot == nil || RightRobot == nil { // return a negative if it goes off the matrix
+		return -1
+	}
+	if LeftRobot == RightRobot { // if they are the same we might as well go elsewhere
+		return -1
+	}
+	if LeftRobot.center == nil { // indicates we have reached the last step
+		return LeftRobot.val + RightRobot.val
+	}
+
+	possibilities := make([]int, 9)
+	possibilities[0] = findBestPath(LeftRobot.left, RightRobot.left)
+	possibilities[1] = findBestPath(LeftRobot.left, RightRobot.center)
+	possibilities[2] = findBestPath(LeftRobot.left, RightRobot.right)
+	possibilities[3] = findBestPath(LeftRobot.center, RightRobot.left)
+	possibilities[4] = findBestPath(LeftRobot.center, RightRobot.center)
+	possibilities[5] = findBestPath(LeftRobot.center, RightRobot.right)
+	possibilities[6] = findBestPath(LeftRobot.right, RightRobot.left)
+	possibilities[7] = findBestPath(LeftRobot.right, RightRobot.center)
+	possibilities[8] = findBestPath(LeftRobot.right, RightRobot.right)
+	return LeftRobot.val + RightRobot.val + slices.Max(possibilities)
+
+}
+
+func createFirstRow(grid [][]int) (*node, *node) {
+	topLeft := &node{}
+	var previous *node
+	for index, val := range grid[0] {
+		if index == 0 {
+			topLeft.center = createStraightDown(grid, 0, 1, nil)
+			topLeft.val = val
+			previous = topLeft
+		} else {
+			newParent := &node{}
+			newParent.center = createStraightDown(grid, index, 1, previous)
+			newParent.left = previous.center
+			newParent.val = val
+			previous = newParent
+		}
+	}
+	return topLeft, previous
+}
+
+func createStraightDown(grid [][]int, X int, Y int, previous *node) *node {
+	if Y < len(grid) {
+		newChild := &node{}
+		newChild.val = grid[Y][X]
+		if previous != nil {
+			newChild.center = createStraightDown(grid, X, Y+1, previous.center)
+			previous.right = newChild
+			if previous.center != nil {
+				newChild.left = previous.center.center
+			}
+		} else {
+			newChild.center = createStraightDown(grid, X, Y+1, nil)
+		}
+		return newChild
+	} else {
+		return nil
+	}
+}
+
+// type position struct {
+// 	X, Y int
+// }
+// type valuePath struct {
+// 	value, bestCol, secondBestCol int
+// }
 
 // func cherryPickup(grid [][]int) int {
 
@@ -180,127 +256,127 @@ type valuePath struct {
 
 // }
 
-type value struct {
-	value, bestCol int
-}
+// type value struct {
+// 	value, bestCol int
+// }
 
-func cherryPickup(grid [][]int) int {
-	storage := grid
-	robot1 := simulateRun(storage, true)
-	storage = grid
-	robot2 := simulateRun(storage, false)
+// func cherryPickup(grid [][]int) int {
+// 	storage := grid
+// 	robot1 := simulateRun(storage, true)
+// 	storage = grid
+// 	robot2 := simulateRun(storage, false)
 
-	if robot1 > robot2 {
-		return robot1
-	} else {
-		return robot2
-	}
-}
+// 	if robot1 > robot2 {
+// 		return robot1
+// 	} else {
+// 		return robot2
+// 	}
+// }
 
-func simulateRun(grid [][]int, first bool) int {
+// func simulateRun(grid [][]int, first bool) int {
 
-	var maxValue map[position]value
-	maxValue = make(map[position]value)
+// 	var maxValue map[position]value
+// 	maxValue = make(map[position]value)
 
-	row := 0
-	col := 0
-	total := 0
+// 	row := 0
+// 	col := 0
+// 	total := 0
 
-	if first {
+// 	if first {
 
-		maxValue = createMatrix(grid)
-		for row < len(grid) {
-			total = total + grid[row][col]
-			if col > 0 {
-				grid[row][col] = grid[row][col-1]
-			} else {
-				grid[row][col] = 0
-			}
-			col = maxValue[position{row, col}].bestCol
-			row++
-		}
-		maxValue = createMatrix(grid)
+// 		maxValue = createMatrix(grid)
+// 		for row < len(grid) {
+// 			total = total + grid[row][col]
+// 			if col > 0 {
+// 				grid[row][col] = grid[row][col-1]
+// 			} else {
+// 				grid[row][col] = 0
+// 			}
+// 			col = maxValue[position{row, col}].bestCol
+// 			row++
+// 		}
+// 		maxValue = createMatrix(grid)
 
-		row = 0
-		col = len(grid[0]) - 1
+// 		row = 0
+// 		col = len(grid[0]) - 1
 
-		for row < len(grid) {
-			total = total + grid[row][col]
-			col = maxValue[position{row, col}].bestCol
-			row++
-		}
-		return total
-	} else {
+// 		for row < len(grid) {
+// 			total = total + grid[row][col]
+// 			col = maxValue[position{row, col}].bestCol
+// 			row++
+// 		}
+// 		return total
+// 	} else {
 
-		maxValue = createMatrix(grid)
-		row := 0
-		col := len(grid[0]) - 1
+// 		maxValue = createMatrix(grid)
+// 		row := 0
+// 		col := len(grid[0]) - 1
 
-		for row < len(grid) {
-			total = total + grid[row][col]
-			if col < len(grid[0])-1 {
-				grid[row][col] = grid[row][col+1]
-			} else {
-				grid[row][col] = 0
-			}
-			col = maxValue[position{row, col}].bestCol
-			row++
-		}
-		maxValue = createMatrix(grid)
-		row = 0
-		col = 0
+// 		for row < len(grid) {
+// 			total = total + grid[row][col]
+// 			if col < len(grid[0])-1 {
+// 				grid[row][col] = grid[row][col+1]
+// 			} else {
+// 				grid[row][col] = 0
+// 			}
+// 			col = maxValue[position{row, col}].bestCol
+// 			row++
+// 		}
+// 		maxValue = createMatrix(grid)
+// 		row = 0
+// 		col = 0
 
-		for row < len(grid) {
-			total = total + grid[row][col]
-			col = maxValue[position{row, col}].bestCol
-			row++
-		}
-		return total
+// 		for row < len(grid) {
+// 			total = total + grid[row][col]
+// 			col = maxValue[position{row, col}].bestCol
+// 			row++
+// 		}
+// 		return total
 
-	}
+// 	}
 
-}
+// }
 
-func createMatrix(grid [][]int) map[position]value {
-	row, col := len(grid)-1, len(grid[0])-1
+// func createMatrix(grid [][]int) map[position]value {
+// 	row, col := len(grid)-1, len(grid[0])-1
 
-	var maxValue map[position]value
-	maxValue = make(map[position]value)
+// 	var maxValue map[position]value
+// 	maxValue = make(map[position]value)
 
-	gridLength := len(grid[0]) - 1
+// 	gridLength := len(grid[0]) - 1
 
-	for row >= 0 {
-		if row == len(grid)-1 {
-			for col >= 0 {
-				maxValue[position{row, col}] = value{0, col}
-				col--
-			}
-		} else {
-			for col >= 0 {
-				left, mid, right := value{0, col - 1}, value{0, col}, value{0, col + 1}
+// 	for row >= 0 {
+// 		if row == len(grid)-1 {
+// 			for col >= 0 {
+// 				maxValue[position{row, col}] = value{0, col}
+// 				col--
+// 			}
+// 		} else {
+// 			for col >= 0 {
+// 				left, mid, right := value{0, col - 1}, value{0, col}, value{0, col + 1}
 
-				curr := grid[row][col]
+// 				curr := grid[row][col]
 
-				if col-1 >= 0 {
-					left.value = curr + maxValue[position{row + 1, col - 1}].value
-				}
-				if col+1 <= gridLength {
-					right.value = curr + maxValue[position{row + 1, col + 1}].value
-				}
-				mid.value = curr + maxValue[position{row + 1, col}].value
+// 				if col-1 >= 0 {
+// 					left.value = curr + maxValue[position{row + 1, col - 1}].value
+// 				}
+// 				if col+1 <= gridLength {
+// 					right.value = curr + maxValue[position{row + 1, col + 1}].value
+// 				}
+// 				mid.value = curr + maxValue[position{row + 1, col}].value
 
-				if left.value >= mid.value && left.value >= right.value {
-					maxValue[position{row, col}] = left
-				} else if mid.value >= left.value && mid.value >= right.value {
-					maxValue[position{row, col}] = mid
-				} else {
-					maxValue[position{row, col}] = right
-				}
-				col--
-			}
-		}
-		col = len(grid[0]) - 1
-		row--
-	}
-	return maxValue
-}
+// 				if left.value >= mid.value && left.value >= right.value {
+// 					maxValue[position{row, col}] = left
+// 				} else if mid.value >= left.value && mid.value >= right.value {
+// 					maxValue[position{row, col}] = mid
+// 				} else {
+// 					maxValue[position{row, col}] = right
+// 				}
+// 				col--
+// 			}
+// 		}
+// 		col = len(grid[0]) - 1
+// 		row--
+// 	}
+// 	return maxValue
+// }
