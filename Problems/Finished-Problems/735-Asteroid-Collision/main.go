@@ -45,10 +45,7 @@ func (s *Stack) Top() (int, error) {
 }
 
 func (s *Stack) IsEmpty() bool {
-	if len(s.items) == 0 {
-		return true
-	}
-	return false
+	return len(s.items) == 0
 }
 
 func asteroidCollision(asteroids []int) []int {
@@ -63,25 +60,24 @@ func asteroidCollision(asteroids []int) []int {
 			} else {
 				goingLeft.Push(asteroids[index])
 				goingLeft, goingRight = collisions(goingLeft, goingRight)
+				if !goingLeft.IsEmpty() {
+					results = append(results, asteroids[index])
+					goingLeft.Pop()
+				}
 			}
 		} else if asteroids[index] > 0 {
 			goingRight.Push(asteroids[index])
 			goingLeft, goingRight = collisions(goingLeft, goingRight)
 		}
 	}
-	stackUnload := make([]int, 0, len(asteroids))
+	flip := []int{}
 	for !goingRight.IsEmpty() {
 		val, _ := goingRight.Top()
-		stackUnload = append(stackUnload, val)
+		flip = append(flip, val)
 		goingRight.Pop()
 	}
-	for !goingLeft.IsEmpty() {
-		val, _ := goingLeft.Top()
-		stackUnload = append(stackUnload, val)
-		goingLeft.Pop()
-	}
-	slices.Reverse(stackUnload) // comes out of stack backward need to reverse it
-	results = append(results, stackUnload...)
+	slices.Reverse(flip)
+	results = append(results, flip...)
 	return results
 }
 
